@@ -10,3 +10,5 @@ services:
       - 80:80
       - 443:443
     tty: true
+    env_file:
+      - ../.env
