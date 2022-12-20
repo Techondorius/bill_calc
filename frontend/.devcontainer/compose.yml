@@ -1,0 +1,9 @@
+version: "3"
+services:
+  react:
+    image: node:latest
+    volumes:
+      - ../:/src
+    ports:
+      - 3000:3000
+    tty: true
