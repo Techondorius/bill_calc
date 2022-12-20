@@ -1,0 +1,6 @@
+{
+  "dockerComposeFile": "./compose.yml",
+  "service": "go",
+  "workspaceFolder": "/src",
+  "extensions": ["formulahendry.code-runner", "golang.go", "oderwat.indent-rainbow"]
+}

@@ -1,0 +1,9 @@
+version: "3"
+services:
+  go:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - ../:/src
+    tty: true
