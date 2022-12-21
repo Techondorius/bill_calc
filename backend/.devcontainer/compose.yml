@@ -11,5 +11,11 @@ services:
       - 443:443
       - 8080:8080
     tty: true
+  db:
+    image: mysql:8.0.31
+    tty: true
     env_file:
       - ../.env
+    volumes:
+      - ../mysql:/var/lib/mysql
+
