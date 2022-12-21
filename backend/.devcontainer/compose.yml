@@ -11,6 +11,8 @@ services:
       - 443:443
       - 8080:8080
     tty: true
+    env_file:
+      - ../.env
   db:
     image: mysql:8.0.31
     tty: true
