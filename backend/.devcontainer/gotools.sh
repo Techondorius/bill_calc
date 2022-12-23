@@ -5,3 +5,4 @@ go install github.com/haya14busa/goplay/cmd/goplay@v1.0.0
 go install github.com/go-delve/delve/cmd/dlv@latest
 go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.1
 go install golang.org/x/tools/gopls@latest
+go install github.com/cosmtrek/air@latest

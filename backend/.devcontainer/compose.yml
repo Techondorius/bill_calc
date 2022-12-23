@@ -13,3 +13,12 @@ services:
     tty: true
     env_file:
       - ../.env
+    command: sh -c "air -c ./.devcontainer/.air.toml"
+  db:
+    image: mysql:8.0.31
+    tty: true
+    env_file:
+      - ../.env
+    volumes:
+      - ../mysql:/var/lib/mysql
+
