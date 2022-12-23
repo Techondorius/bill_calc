@@ -1,41 +1,22 @@
 package model
 
-import "errors"
-
 type User struct {
-	ID   int `gorm:"primary_key"`
-	Name string
+	ID    int `gorm:"primaryKey"`
+	Name  string
+	Bills []BillUsers
 }
 
-func NewUser(name string) (*User, error) {
-	if len(name) < 2 {
-		return nil, errors.New("name must be more than a charactor")
+func FindUserByID(userID int) (*User, bool) {
+	u := &User{ID: userID}
+	if err := DB.Find(u).Error; err != nil {
+		return nil, false
 	}
-	return &User{Name: name}, nil
+	return u, true
 }
 
-func InsertUserToDB(u *User) error {
-	q := DB.Create(u)
-	if q.Error != nil {
-		return q.Error
+func InsertUsers(u ...User) error {
+	if err := DB.Create(u).Error; err != nil {
+		return err
 	}
 	return nil
-}
-
-func SelectAllUserFromDB() []*User {
-	us := &[]*User{}
-	q := DB.Find(us)
-	if q.Error != nil {
-		return nil
-	}
-	return *us
-}
-
-func SelectUserByIDFromDB(id uint) *User {
-	us := &User{ID: 1}
-	q := DB.Find(us)
-	if q.Error != nil {
-		return nil
-	}
-	return us
 }

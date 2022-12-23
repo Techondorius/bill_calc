@@ -16,9 +16,25 @@ func InitGorm() error {
 	if err != nil {
 		return err
 	}
-	DB = db
+	DB = db.Debug()
 
+	ub := BillUsers{}
 	u := User{}
-	db.AutoMigrate(u)
+	b := Bill{}
+
+	fmt.Println(ub, u, b)
+
+	DB.AutoMigrate(&u, &b, &ub)
 	return nil
+}
+
+func InsertTestData() {
+	u := []User{
+		{
+			Name: "Miteh",
+		}, {
+			Name: "Techondorius",
+		},
+	}
+	InsertUsers(u...)
 }
