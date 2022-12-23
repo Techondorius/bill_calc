@@ -1,10 +1,6 @@
 {
-	"dockerComposeFile": "compose.yml",
-	"service": "react",
-	"workspaceFolder": "/src",
-	"extensions": [
-		"dbaeumer.vscode-eslint",
-		"esbenp.prettier-vscode",
-		"Vue.volar"
-	]
+  "dockerComposeFile": "compose.yml",
+  "service": "react",
+  "workspaceFolder": "/src",
+  "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode", "bradlc.vscode-tailwindcss"]
 }
