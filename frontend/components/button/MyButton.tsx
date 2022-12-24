@@ -1,12 +1,13 @@
-import { ReactNode } from 'react'
+import { MouseEventHandler, ReactNode } from 'react'
 
 type Props = {
   children?: ReactNode
   className?: string
   type: string
+  onClick?: MouseEventHandler<HTMLButtonElement>
 }
 
-export const MyButton: React.FC<Props> = ({ children, className, type }) => {
+export const MyButton: React.FC<Props> = ({ children, className, type, onClick }) => {
   const classes =
     type != 'main'
       ? className +
@@ -15,7 +16,7 @@ export const MyButton: React.FC<Props> = ({ children, className, type }) => {
         ' shadow border-2 border-blue-500 bg-blue-500 hover:bg-blue-400 focus:shadow-outline focus:outline-none text-white py-2 px-4 rounded'
 
   return (
-    <button className={classes} type='button'>
+    <button className={classes} type='button' onClick={onClick}>
       {children}
     </button>
   )
