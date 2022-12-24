@@ -5,9 +5,9 @@ import { useState } from 'react'
 const IdentifyLoginForm = () => {
   const [uid, setUid] = useState('')
   const [pwd, setPwd] = useState('')
-  const submit = () => {
-    console.log(uid)
-    console.log(pwd)
+  const submit = async () => {
+    await console.log(uid)
+    await console.log(pwd)
   }
   return (
     <>
@@ -33,8 +33,9 @@ const IdentifyLoginForm = () => {
             setPwd(newPwd.target.value)
           }}
         />
-        <MyButton type='main' className='rounded-full w-full'>LOGIN</MyButton>
-        {/* <MyButton type='main'>asdf</MyButton> */}
+        <MyButton type='main' className='rounded-full w-full' onClick={submit}>
+          LOGIN
+        </MyButton>
       </div>
     </>
   )
