@@ -7,7 +7,9 @@ import (
 
 func TestInsertUserToDB(t *testing.T) {
 	type args struct {
-		u *User
+		UserName    string
+		UserID      string
+		RawPassword string
 	}
 	tests := []struct {
 		name    string
@@ -17,16 +19,20 @@ func TestInsertUserToDB(t *testing.T) {
 		{
 			name: "test",
 			args: args{
-				u: &User{
-					ID: 0,
-				},
+				UserName:    "miteh",
+				UserID:      "aojiru",
+				RawPassword: "asdf",
 			},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := InsertUsers(*tt.args.u); (err != nil) != tt.wantErr {
+			u, err := NewUser(tt.args.UserName, tt.args.UserID, tt.args.RawPassword)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err := InsertUsers(*u); (err != nil) != tt.wantErr {
 				t.Errorf("InsertUserToDB() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
