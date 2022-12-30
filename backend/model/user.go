@@ -68,3 +68,27 @@ func InsertUsers(u ...User) error {
 	}
 	return nil
 }
+
+func NewUser(userName string, userID string, rawPassword string) (*User, error) {
+	u := &User{}
+
+	un, err := NewUserName(userName)
+	if err != nil {
+		return nil, err
+	}
+	u.UserName = *un
+
+	uid, err := NewUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+	u.UserID = *uid
+
+	pw, err := NewHashedPassWord(rawPassword)
+	if err != nil {
+		return nil, err
+	}
+	u.HashedPassWord = *pw
+
+	return u, nil
+}
