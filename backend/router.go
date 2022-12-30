@@ -1,6 +1,9 @@
 package main
 
 import (
+	"math/rand"
+	"time"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -15,6 +18,7 @@ func Routers() *gin.Engine {
 
 	g.GET("/", index)
 	g.POST("/", index)
+	g.GET("/rand", randRouter)
 
 	return g
 }
@@ -22,5 +26,12 @@ func Routers() *gin.Engine {
 func index(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"message": "Hello",
+	})
+}
+
+func randRouter(c *gin.Context) {
+	rand.Seed(time.Now().UnixNano())
+	c.JSON(200, gin.H{
+		"message": rand.Int(),
 	})
 }
