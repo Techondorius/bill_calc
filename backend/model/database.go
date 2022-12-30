@@ -27,14 +27,3 @@ func InitGorm() error {
 	DB.AutoMigrate(&u, &b, &ub)
 	return nil
 }
-
-func InsertTestData() {
-	u := []User{
-		{
-			Name: "Miteh",
-		}, {
-			Name: "Techondorius",
-		},
-	}
-	InsertUsers(u...)
-}
