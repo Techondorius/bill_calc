@@ -124,3 +124,53 @@ func TestNewUserName(t *testing.T) {
 		})
 	}
 }
+
+func TestUser_CompairHashPWandRow(t *testing.T) {
+	type fields struct {
+		userName    string
+		userID      string
+		rawPassword string
+	}
+	type args struct {
+		rawPW string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "true pw check",
+			fields: fields{
+				userName:    "asdf",
+				userID:      "asdf",
+				rawPassword: "aojiru",
+			},
+			args: args{
+				rawPW: "aojiru",
+			},
+			wantErr: false,
+		}, {
+			name: "fail pw check",
+			fields: fields{
+				userName:    "asdf",
+				userID:      "asdf",
+				rawPassword: "aojiru",
+			},
+			args: args{
+				rawPW: "aaojiru",
+			},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			u, _ := NewUser(tt.fields.userName, tt.fields.userID, tt.fields.rawPassword)
+			if err := u.CompairHashPWandRow(tt.args.rawPW); (err != nil) != tt.wantErr {
+				t.Errorf("User.CompairHashPWandRow() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
