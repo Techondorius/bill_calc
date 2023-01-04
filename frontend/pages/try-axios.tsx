@@ -1,9 +1,10 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
+import { MyButton } from 'components/button/MyButton'
 import { useState } from 'react'
 
-const baseURL = 'http://localhost:8080'
+const baseURL = 'http://localhost:8080/rand'
 
-const request = () => {
+const Request = () => {
   interface indexRes {
     message?: string
   }
@@ -12,14 +13,16 @@ const request = () => {
     const msg = await axios.get<indexRes>(baseURL)
     setRes(msg.data.message)
   }
-  fetchData()
+  const a = () => fetchData()
 
   return (
     <>
       <h1>{res}</h1>
-      {/* <button>fetchData</button> */}
+      <MyButton type='main' onClick={a}>
+        fetchData
+      </MyButton>
     </>
   )
 }
 
-export default request
+export default Request
