@@ -6,3 +6,4 @@ go install github.com/go-delve/delve/cmd/dlv@latest
 go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.1
 go install golang.org/x/tools/gopls@latest
 go install github.com/cosmtrek/air@latest
+go install github.com/davidrjenni/reftools/cmd/fillstruct@v0.0.0-20210213085015-40322ffdc2e4
