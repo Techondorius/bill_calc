@@ -23,48 +23,110 @@ type User struct {
 }
 
 type UserName struct {
-	UserName string
+	UserName string `gorm:"not null"`
+}
+
+type UserID struct {
+	UserID string `gorm:"unique;not null"`
+}
+
+type HashedPassWord struct {
+	HashedPassWord []byte `gorm:"not null"`
 }
 
 func NewUserName(un string) (*UserName, error) {
-	log.Println(len(un))
-	log.Println(len(un) >= USER_NAME_MIN_LEN)
-	log.Println(len(un) <= USER_NAME_MAX_LEN)
 	if !(len(un) >= USER_NAME_MIN_LEN && len(un) <= USER_NAME_MAX_LEN) {
-		return nil, fmt.Errorf("UserNameが短すぎます。UserNameは%d~%d文字です。", USER_NAME_MIN_LEN, USER_NAME_MAX_LEN)
+		return nil, fmt.Errorf("UserNameの長さがおかしいです。UserNameは%d~%d文字です。", USER_NAME_MIN_LEN, USER_NAME_MAX_LEN)
 	}
 	return &UserName{un}, nil
 }
 
-type UserID struct {
-	UserID string
+func NewUserID(uid string) (*UserID, error) {
+	if !(len(uid) >= USER_ID_MIN_LEN && len(uid) <= USER_ID_MAX_LEN) {
+		return nil, fmt.Errorf("UserIDの長さがおかしいです。UserIDは%d~%d文字です。", USER_ID_MIN_LEN, USER_ID_MAX_LEN)
+	}
+	return &UserID{uid}, nil
 }
 
-type HashedPassWord struct {
-	HashedPassWord []byte
-}
-
-func NewHashedPassWord(rawPW string) HashedPassWord {
-	password := []byte("password")
+func NewHashedPassWord(rawPW string) (*HashedPassWord, error) {
+	if len(rawPW) == 0 {
+		return nil, fmt.Errorf("pw is empty")
+	}
+	password := []byte(rawPW)
 	hashed, _ := bcrypt.GenerateFromPassword(password, 10)
-	fmt.Println((hashed))
 	hpw := HashedPassWord{
 		HashedPassWord: hashed,
 	}
-	return hpw
+	return &hpw, nil
 }
 
-func FindUserByID(userID int) (*User, bool) {
-	u := &User{ID: userID}
-	if err := DB.Find(u).Error; err != nil {
-		return nil, false
+func NewUser(userName string, userID string, rawPassword string) (*User, error) {
+	u := &User{}
+
+	un, err := NewUserName(userName)
+	if err != nil {
+		return nil, err
 	}
-	return u, true
+	u.UserName = *un
+
+	uid, err := NewUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+	u.UserID = *uid
+
+	pw, err := NewHashedPassWord(rawPassword)
+	if err != nil {
+		return nil, err
+	}
+	u.HashedPassWord = *pw
+
+	return u, nil
+}
+
+func (u *User) CompairHashPWandRow(rawPW string) error {
+	if err := bcrypt.CompareHashAndPassword(u.HashedPassWord.HashedPassWord, []byte(rawPW)); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (uid *UserID) CheckIDDuplication(uidCheck string) error {
+	checkingID, err := NewUserID(uidCheck)
+	if err != nil {
+		return err
+	}
+	u := &User{UserID: *checkingID}
+	a := DB.Find(u).RowsAffected
+	if a != 0 {
+		return fmt.Errorf("ID already Taken")
+	}
+	return nil
+}
+
+func (uid *UserID) ReturnString() string{
+	return uid.UserID
+}
+
+func FindUserByID(userID string) (*User, error) {
+	uid, err := NewUserID(userID)
+	if err != nil {
+		return nil, err
+	}
+	u := &User{UserID: *uid}
+	if err := DB.Find(u).Error; err != nil {
+		return nil, err
+	}
+	return u, nil
 }
 
 func InsertUsers(u ...User) error {
-	if err := DB.Create(u).Error; err != nil {
+	db := DB.Create(u)
+	log.Println(db.RowsAffected)
+	if err := db.Error; err != nil {
 		return err
+	} else {
+		log.Println(err)
 	}
 	return nil
 }

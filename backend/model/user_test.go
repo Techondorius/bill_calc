@@ -7,7 +7,9 @@ import (
 
 func TestInsertUserToDB(t *testing.T) {
 	type args struct {
-		u *User
+		UserName    string
+		UserID      string
+		RawPassword string
 	}
 	tests := []struct {
 		name    string
@@ -17,16 +19,20 @@ func TestInsertUserToDB(t *testing.T) {
 		{
 			name: "test",
 			args: args{
-				u: &User{
-					ID: 0,
-				},
+				UserName:    "miteh",
+				UserID:      "aojiru",
+				RawPassword: "asdf",
 			},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := InsertUsers(*tt.args.u); (err != nil) != tt.wantErr {
+			u, err := NewUser(tt.args.UserName, tt.args.UserID, tt.args.RawPassword)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err := InsertUsers(*u); (err != nil) != tt.wantErr {
 				t.Errorf("InsertUserToDB() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
@@ -114,6 +120,56 @@ func TestNewUserName(t *testing.T) {
 			}
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("NewUserName() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestUser_CompairHashPWandRow(t *testing.T) {
+	type fields struct {
+		userName    string
+		userID      string
+		rawPassword string
+	}
+	type args struct {
+		rawPW string
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name: "true pw check",
+			fields: fields{
+				userName:    "asdf",
+				userID:      "asdf",
+				rawPassword: "aojiru",
+			},
+			args: args{
+				rawPW: "aojiru",
+			},
+			wantErr: false,
+		}, {
+			name: "fail pw check",
+			fields: fields{
+				userName:    "asdf",
+				userID:      "asdf",
+				rawPassword: "aojiru",
+			},
+			args: args{
+				rawPW: "aaojiru",
+			},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			u, _ := NewUser(tt.fields.userName, tt.fields.userID, tt.fields.rawPassword)
+			if err := u.CompairHashPWandRow(tt.args.rawPW); (err != nil) != tt.wantErr {
+				t.Errorf("User.CompairHashPWandRow() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}

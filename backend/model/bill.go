@@ -2,7 +2,7 @@ package model
 
 import "errors"
 
-var MAX_PRICE = 1000000
+const MAX_PRICE = 1000000
 
 type uIDPrice struct {
 	userID int
