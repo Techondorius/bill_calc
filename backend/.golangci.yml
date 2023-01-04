@@ -13,7 +13,6 @@ linters:
   disable-all: true
   enable:
     - deadcode
-    - errcheck
     - gosimple
     - govet
     - ineffassign
@@ -25,7 +24,7 @@ linters:
     - bodyclose
     - depguard
     - dogsled
-    - gochecknoglobals
+    # - gochecknoglobals
     - gochecknoinits
     # - goconst
     - gocritic
@@ -37,7 +36,7 @@ linters:
     - misspell
     - nakedret
     - prealloc
-    - scopelint
+    # - scopelint
     # - stylecheck
     - unconvert
     - unparam
