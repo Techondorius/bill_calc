@@ -104,17 +104,13 @@ func (uid *UserID) CheckIDDuplication(uidCheck string) error {
 	return nil
 }
 
-func (uid *UserID) ReturnString() string{
+func (uid *UserID) ReturnString() string {
 	return uid.UserID
 }
 
 func FindUserByID(userID string) (*User, error) {
-	uid, err := NewUserID(userID)
-	if err != nil {
-		return nil, err
-	}
-	u := &User{UserID: *uid}
-	if err := DB.Find(u).Error; err != nil {
+	u := &User{}
+	if err := DB.First(u, "user_id = ?", userID).Error; err != nil {
 		return nil, err
 	}
 	return u, nil
