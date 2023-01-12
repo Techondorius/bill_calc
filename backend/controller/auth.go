@@ -12,7 +12,7 @@ import (
 func GenerateJWT(uid string) string {
 	claims := jwt.MapClaims{
 		"userid": uid,
-		"exp":    time.Now().Add(time.Hour * 24).Unix(),
+		"exp":    time.Now().Add(time.Hour * 24 * 7).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, _ := token.SignedString([]byte("asdfasdf"))
