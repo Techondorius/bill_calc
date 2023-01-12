@@ -13,9 +13,20 @@ func Routers() *gin.Engine {
 	g := gin.Default()
 
 	// Cors
-	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
-	config.AddAllowHeaders("token")
+	config := cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}
+	config.AddAllowHeaders(
+		"Access-Control-Allow-Credentials",
+		"Access-Control-Allow-Headers",
+		"Content-Type",
+		"Content-Length",
+		"Accept-Encoding",
+		"Authorization",
+	)
 	g.Use(cors.New(config))
 
 	g.GET("/", index)

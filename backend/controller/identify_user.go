@@ -2,6 +2,7 @@ package controller
 
 import (
 	"log"
+	"net/http"
 
 	"github.com/Techondorius/bill_calc/model"
 	"github.com/Techondorius/bill_calc/view"
@@ -33,8 +34,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
+	c.SetSameSite(http.SameSiteLaxMode)
 	token := GenerateJWT(u.UserID.ReturnString())
-	view.StatusOK(c, gin.H{
-		"token": token,
-	})
+	c.SetCookie("token", token, 3600*24*7, "/", "localhost", true, true)
 }
