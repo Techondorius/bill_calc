@@ -1,27 +1,42 @@
-import { Button, TextField } from '@mui/material'
+import { TextField } from '@mui/material'
 import axios, { AxiosError } from 'axios'
 import { MyButton } from 'components/button/MyButton'
 import { useState } from 'react'
+import { useRouter } from 'next/router'
 
 const IdentifyLoginForm = () => {
   const [uid, setUid] = useState('')
   const [pwd, setPwd] = useState('')
+  const [errMsg, setErrMsg] = useState('')
   interface loginRes {
     token: string
   }
   interface loginResError {
     error: string
   }
+  const router = useRouter()
   const submit = async () => {
     await console.log(uid)
     await console.log(pwd)
     axios
-      .post<loginRes>('http://localhost:8080/login', { userid: uid, password: pwd })
-      .then((res) => {
-        console.log(res.data.token)
+      .post<loginRes>(
+        'http://localhost:8080/login',
+        {
+          userid: uid,
+          password: pwd,
+        },
+        {
+          withCredentials: true,
+        },
+      )
+      .then(() => {
+        setErrMsg('')
+        router.push('/bills')
       })
       .catch((e: AxiosError<loginResError>) => {
-        console.log(e.response)
+        console.log(e.response.data.error)
+        console.log(e)
+        setErrMsg(e.response.data.error)
       })
   }
   return (
@@ -51,6 +66,7 @@ const IdentifyLoginForm = () => {
         <MyButton type='main' className='rounded-full w-full' onClick={submit}>
           LOGIN
         </MyButton>
+        <p>{errMsg}</p>
       </div>
     </>
   )
