@@ -4,9 +4,9 @@ import "errors"
 
 const MAX_PRICE = 1000000
 
-type uIDPrice struct {
-	userID int
-	price  int
+type UIDPrice struct {
+	UserID int `json:"userID"`
+	Price  int `json:"price"`
 }
 
 func NewUIDPrice(useriD int, price int) *uIDPrice {
