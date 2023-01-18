@@ -1,6 +1,10 @@
 package model
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+	"time"
+)
 
 const MAX_PRICE = 1000000
 
@@ -9,17 +13,26 @@ type UIDPrice struct {
 	Price  int `json:"price"`
 }
 
-func NewUIDPrice(useriD int, price int) *uIDPrice {
-	return &uIDPrice{
-		userID: useriD,
-		price:  price,
+func NewUIDPrice(useriD int, price int) *UIDPrice {
+	return &UIDPrice{
+		UserID: useriD,
+		Price:  price,
+	}
+}
+
+func (uidp UIDPrice) ToBillUsers() BillUsers {
+	return BillUsers{
+		UserID: uidp.UserID,
+		Price: Price{
+			Price: uidp.Price,
+		},
 	}
 }
 
 type Bill struct {
 	ID           int `gorm:"primaryKey"`
 	Subject      string
-	Price        Price `gorm:"embedded"`
+	Date         time.Time
 	BillingUsers []*BillUsers
 	Note         string
 }
@@ -32,17 +45,14 @@ func FindBillByID(billID int) (*Bill, bool) {
 	return bill, true
 }
 
-func NewBill(subject string, price int, uIDPrice []uIDPrice, note string) (*Bill, error) {
+func NewBill(subject string, date time.Time, uIDPrice []UIDPrice, note string) (*Bill, error) {
 	if len(subject) < 1 {
 		return nil, errors.New("Subject must be filled")
 	}
-	pr, err := NewPrice(price)
-	if err != nil {
-		return nil, err
-	}
+
 	bus := []*BillUsers{}
 	for _, up := range uIDPrice {
-		bu, err := NewBillUsers(up.userID, up.price)
+		bu, err := NewBillUsers(up.UserID, up.Price)
 		if err != nil {
 			return nil, err
 		}
@@ -50,11 +60,27 @@ func NewBill(subject string, price int, uIDPrice []uIDPrice, note string) (*Bill
 	}
 	bill := &Bill{
 		Subject:      subject,
-		Price:        *pr,
+		Date:         date,
 		BillingUsers: bus,
 		Note:         note,
 	}
 	return bill, nil
+}
+
+func (bill *Bill) AddUserToBillingUsers(uid int, price int) error {
+	bu, err := NewBillUsers(uid, price)
+	if err != nil {
+		return err
+	}
+	bill.BillingUsers = append(bill.BillingUsers, bu)
+	return nil
+}
+
+func (bill *Bill) SaveToDB() error {
+	if DB.Create(bill).Error != nil {
+		return fmt.Errorf("no rows affected...")
+	}
+	return nil
 }
 
 type Price struct {
