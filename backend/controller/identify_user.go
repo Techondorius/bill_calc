@@ -37,4 +37,5 @@ func Login(c *gin.Context) {
 	c.SetSameSite(http.SameSiteLaxMode)
 	token := GenerateJWT(u.UserID.ReturnString())
 	c.SetCookie("token", token, 3600*24*7, "/", "localhost", true, true)
+	c.JSON(204, nil)
 }

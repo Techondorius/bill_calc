@@ -19,8 +19,8 @@ func TestInsertUserToDB(t *testing.T) {
 		{
 			name: "test",
 			args: args{
-				UserName:    "miteh",
-				UserID:      "aojiru",
+				UserName:    "miteh2",
+				UserID:      "aojiruu",
 				RawPassword: "asdf",
 			},
 			wantErr: false,

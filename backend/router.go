@@ -34,6 +34,7 @@ func Routers() *gin.Engine {
 	g.GET("/rand", randRouter)
 
 	g.POST("/login", controller.Login)
+	g.POST("/bill", controller.NewBillHandlerFunc)
 
 	return g
 }
