@@ -11,3 +11,9 @@ func Unauthorized(c *gin.Context, obj any) {
 		"error": obj,
 	})
 }
+
+func BadRequest(c *gin.Context, obj any) {
+	c.JSON(http.StatusBadRequest, gin.H{
+		"error": obj,
+	})
+}
