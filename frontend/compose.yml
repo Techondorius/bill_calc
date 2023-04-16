@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+    - .:/src
+    ports:
+    - 3000:3000
+    - 24678:24678
+    command: sh -c "yarn dev"
