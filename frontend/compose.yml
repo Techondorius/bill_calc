@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  frontend:
+    image: node:19-alpine3.16
+    volumes:
+    - .:/src
+    ports:
+    - 3000:3000
+    command: sh -c "cd /src; yarn dev"
